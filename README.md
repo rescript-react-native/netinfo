@@ -1,81 +1,261 @@
-#### 🎟 [Reason Conf US](https://www.reason-conf.us) is happening October 7-8th in Chicago 🎉
+# BuckleScript bindings to `@react-native-community/netinfo`
 
-Buy tickets or sponsor the event by visiting
-[https://www.reason-conf.us](https://www.reason-conf.us)
+[![Version](https://img.shields.io/npm/v/@reason-react-native/netinfo.svg)](https://www.npmjs.com/@reason-react-native/netinfo)
 
----
+Reason / BuckleScript bindings for
+[`@react-native-community/netinfo`](https://github.com/react-native-community/react-native-netinfo)
+(exposed as `ReactNativeNetInfo`).
 
-# Reason bindings for React Native
+## Support
 
-[![Build Status](https://img.shields.io/circleci/project/github/reasonml-community/reason-react-native/master.svg)](https://circleci.com/gh/reasonml-community/reason-react-native)
-[![Version](https://img.shields.io/npm/v/reason-react-native.svg)](https://www.npmjs.com/package/reason-react-native)
-[![Chat](https://img.shields.io/discord/235176658175262720.svg?logo=discord&colorb=blue)](https://reasonml-community.github.io/reason-react-native/discord/)
+`@reason-react-native/netinfo` X.y._ means it's compatible with
+`@react-native-community/netinfo` X.y._
 
-[BuckleScript](https://bucklescript.github.io) bindings for
-[React Native](https://github.com/facebook/react-native) allows to use
-[ReasonML](https://reasonml.github.io) with
-[ReasonReact](https://reasonml.github.io/reason-react/) to make your iOS,
-Android and [Web](https://github.com/necolas/react-native-web) apps.
+| version | react-native version |
+| ------- | -------------------- |
+| 4.1.0+  | 0.60.0+              |
 
-## Getting Started
+For 0.59-, you should use
+[`jetify -r`](https://github.com/mikehardy/jetifier/blob/master/README.md#to-reverse-jetify--convert-node_modules-dependencies-to-support-libraries).
 
-Check our
-[getting started](https://reasonml-community.github.io/reason-react-native/en/docs/)
-guide for details.
+## Installation
 
-## Documentation
-
-See https://reasonml-community.github.io/reason-react-native.
-
-## Contribute
-
-Read the [contribution guidelines](./CONTRIBUTING.md) before contributing.
-
-## Changelog
-
-Check the [changelog](./CHANGELOG.md) for more informations about recent
-releases.
-
-## Code of Conduct
-
-We want this community to be friendly and respectful to each other. Please read
-[the full text](https://github.com/reasonml-community/reason-react-native/blob/master/CODE_OF_CONDUCT.md)
-so that you can understand what actions will and will not be tolerated.
-
----
-
-## 🚨 Usage from Git repo
-
-If you use things unreleased from the git repo, you will need to link all
-folders (packages) that you need at the root of node_modules. The easiest way is
-to create the symlink you need in your `package.json` `prepare` step:
-
-First add this repo as a dep
+With `yarn`:
 
 ```console
-yarn add https://github.com/reasonml-community/reason-react-native
+yarn add @reason-react-native/netinfo
 ```
 
-Next, add this cross-platform symlink tool
+With `npm`:
 
 ```console
-yarn add --dev symlink-dir
+npm install @reason-react-native/netinfo
 ```
 
-Then add to you `package.json`
+If you use React Native 0.60, `@react-native-community/netinfo` should be linked
+to your project:
 
-```js
+```console
+react-native link @react-native-community/netinfo
+```
+
+Finally, `@reason-react-native/netinfo` should be added to `bs-dependencies` in
+`BuckleScript` configuration of the project (`bsconfig.json`). For example:
+
+```diff
 {
-  "scripts": {
-    "reason-react-native-monorepo-trick": "symlink-dir ./node_modules/reason-react-native-monorepo/reason-react-native node_modules/reason-react-native && symlink-dir ./node_modules/reason-react-native-monorepo/bs-react-native-jsx3-compat node_modules/bs-react-native-jsx3-compat",
-    "prepare": "yarn reason-react-native-monorepo-trick"
-  }
+  //...
+  "bs-dependencies": [
+    "reason-react",
+    "reason-react-native",
++    "@reason-react-native/netinfo"
+  ],
+  //...
 }
 ```
 
-⚠️ In the example above, we only linked `reason-react-native` and
-`bs-react-native-jsx3-compat`. Be sure to link all the package you have in your
-`bsconfig.json` that need to be used from git.
+## Usage
 
-👀 If you find a trick more easy to read/maintain (and still cross-platform),
-please share it with us via Discord, an issue, or a PR!
+### Types
+
+#### `netInfoStateType`
+
+Kind of the current network connection. Valid values are:
+
+| Value       | Platforms             | Connection State |
+| ----------- | --------------------- | ---------------- |
+| `none`      | Android, iOS, Windows | Not active       |
+| `unknown`   | Android, iOS, Windows | Undetermined     |
+| `cellular`  | Android, iOS, Windows | Active           |
+| `wifi`      | Android, iOS, Windows | Active           |
+| `bluetooth` | Android               | Active           |
+| `ethernet`  | Android, Windows      | Active           |
+| `wimax`     | Android               | Active           |
+| `vpn`       | Android               | Active           |
+| `other`     | Android, iOS, Windows | Active           |
+
+#### `netInfoCellularGeneration`
+
+Cellular generation of the current network connection. Valid values are:
+
+| Value   | Notes                                                                               |
+| ------- | ----------------------------------------------------------------------------------- |
+| `net2g` | Inlined as "2g". Returned for CDMA, EDGE, GPRS and IDEN connections                 |
+| `net3g` | Inlined as "3g". Returned for EHRPD, EVDO, HSPA, HSUPA, HSDPA and UTMS connections. |
+| `net4g` | Inlined as "4g". Returned for HSPAP and LTE connections                             |
+
+#### `details`
+
+```reason
+type details = {
+  .
+  "isConnectionExpensive": bool,
+  "cellularGeneration": Js.Nullable.t(netInfoCellularGeneration),
+};
+```
+
+#### `netInfoState`
+
+```reason
+type netInfoState = {
+  .
+  "_type": netInfoStateType,
+  "isConnected": bool,
+  "details": Js.Null.t(details),
+};
+```
+
+`details` key will have value `Js.Null.empty` (`null`) when `_type` is `null` or
+`unknown`.
+
+If the `details` objects is not `null`, the `cellularGeneration` key within will
+
+- have value `Js.Nullable.undefined` when `_type` is `wifi`, `bluetooth`,
+  `ethernet`, `wimax`, `vpn` or `other`.
+- have value `Js.Nullable.null` if the connection is not cellular or its
+  generation cannot be determined.
+- be of type `netInfoCellularGeneration` only when `_type` is `cellular` and its
+  generation can be determined.
+
+### Methods
+
+#### `fetch`
+
+To query the connection state, returns `netInfoState` wrapped in a `Promise`.
+
+```reason
+fetch: unit => Js.Promise.t(netInfoState) = "";
+```
+
+Below example demonstrates determination of the cellular connection generation,
+using this method.
+
+```reason
+React.useEffect0(() => {
+  Js.Promise.(
+    ReactNativeNetInfo.fetch()
+    |> then_(w =>
+         {
+           switch (w##details->Js.Null.toOption) {
+           | None => "Connection type is none or unknown"->Js.Console.warn
+           | Some(x) =>
+             let y = x##cellularGeneration;
+             switch (y->Js.Nullable.toOption) {
+             | None =>
+               if (y == Js.Nullable.undefined) {
+                 "Connection type is wifi, bluetooth, ethernet, wimax, vpn or other"
+                 ->Js.Console.warn;
+               } else {
+                 "Connection generation unknown"->Js.Console.warn;
+               }
+             | Some(z) =>
+               if (z == ReactNativeNetInfo.net2G) {
+                 "2G connection"->Js.Console.warn;
+               } else if (z == ReactNativeNetInfo.net3G) {
+                 "3G connection"->Js.Console.warn;
+               } else {
+                 "4G connection"->Js.Console.warn;
+               }
+             };
+           };
+         }
+         ->resolve
+       )
+    |> catch(err => "error"->Js.Console.warn->resolve)
+    |> ignore
+  );
+  None;
+});
+```
+
+#### `addEventListener`
+
+To subscribe to the connection state; accepts a listener of type
+`netInfoState => unit` and returns an unsubscribe method of type `unit => unit`.
+The listener will be called once following subscription and each time connection
+state changes.
+
+```reason
+addEventListener: (netInfoState => unit) => t;
+```
+
+where
+
+```reason
+type t = unit => unit
+```
+
+Below example demonstrates subscribing to changes in connection state:
+
+```reason
+React.useEffect0(() => {
+  let remove =
+    ReactNativeNetInfo.addEventListener(w =>
+      (
+        switch (w##details->Js.Null.toOption) {
+        | None => "Connection type is none or unknown"
+        | Some(x) =>
+          let y = x##cellularGeneration;
+          switch (y->Js.Nullable.toOption) {
+          | None =>
+            if (y == Js.Nullable.undefined) {
+              "Connection type is wifi, bluetooth, ethernet, wimax, vpn or other";
+            } else {
+              "Connection generation unknown";
+            }
+          | Some(z) =>
+            if (z == ReactNativeNetInfo.net2G) {
+              "2G connection";
+            } else if (z == ReactNativeNetInfo.net3G) {
+              "3G connection";
+            } else {
+              "4G connection";
+            }
+          };
+        }
+      )
+      ->Js.Console.warn
+    );
+  Js.Console.warn(remove);
+  Some(() => remove());
+});
+```
+
+#### `useNetInfo`
+
+This method returns a React Hook with type `netInfoState`
+
+```reason
+useNetInfo: unit => netInfoState
+```
+
+Below example demonstrates its use within a `Text` component:
+
+```reason
+<Text>
+  (
+    switch (ReactNativeNetInfo.useNetInfo()##details->Js.Null.toOption) {
+    | None => "Connection type is none or unknown"
+    | Some(x) =>
+      let y = x##cellularGeneration;
+      switch (y->Js.Nullable.toOption) {
+      | None =>
+        if (y == Js.Nullable.undefined) {
+          "Connection type is wifi, bluetooth, ethernet, wimax, vpn or other";
+        } else {
+          "Connection generation unknown";
+        }
+      | Some(z) =>
+        if (z == ReactNativeNetInfo.net2G) {
+          "2G connection";
+        } else if (z == ReactNativeNetInfo.net3G) {
+          "3G connection";
+        } else {
+          "4G connection";
+        }
+      };
+    }
+  )
+  ->React.string
+</Text>
+```
