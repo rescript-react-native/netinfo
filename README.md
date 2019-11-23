@@ -1,6 +1,8 @@
-# BuckleScript bindings to `@react-native-community/netinfo`
+# `@reason-react-native/netinfo`
 
+[![Build Status](https://github.com/reason-react-native/netinfo/workflows/Build/badge.svg)](https://github.com/reason-react-native/netinfo/actions)
 [![Version](https://img.shields.io/npm/v/@reason-react-native/netinfo.svg)](https://www.npmjs.com/@reason-react-native/netinfo)
+[![Chat](https://img.shields.io/discord/235176658175262720.svg?logo=discord&colorb=blue)](https://reason-react-native.github.io/discord/)
 
 Reason / BuckleScript bindings for
 [`@react-native-community/netinfo`](https://github.com/react-native-community/react-native-netinfo)
@@ -259,3 +261,24 @@ Below example demonstrates its use within a `Text` component:
   ->React.string
 </Text>
 ```
+
+---
+
+## Changelog
+
+Check the [changelog](./CHANGELOG.md) for more informations about recent
+releases.
+
+---
+
+## Contribute
+
+Read the
+[contribution guidelines](https://github.com/reason-react-native/.github/blob/master/CONTRIBUTING.md)
+before contributing.
+
+## Code of Conduct
+
+We want this community to be friendly and respectful to each other. Please read
+[our full code of conduct](https://github.com/reason-react-native/.github/blob/master/CODE_OF_CONDUCT.md)
+so that you can understand what actions will and will not be tolerated.

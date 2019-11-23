@@ -1,4 +1,4 @@
-# Changelog
+# Changelog of `@reason-react-native/netinfo`
 
 ## 4.1.0
 
