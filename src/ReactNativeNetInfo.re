@@ -40,27 +40,55 @@ let net3G = "3g";
 [@bs.inline]
 let net4G = "4g";
 
+type response;
+
+[@bs.get] external status: response => int = "status";
+
+type netInfoConfiguration;
+
+[@bs.obj]
+external netInfoConfiguration:
+  (
+    ~reachabilityUrl: string=?,
+    ~reachabilityTest: response => bool=?,
+    ~reachabilityShortTimeout: float=?,
+    ~reachabilityLongTimeout: float=?,
+    unit
+  ) =>
+  netInfoConfiguration =
+  "";
+
 type details = {
   .
   "isConnectionExpensive": bool,
+  "ssid": Js.Nullable.t(string),
+  "strength": Js.Nullable.t(int),
+  "ipAddress": Js.Nullable.t(string),
+  "subnet": Js.Nullable.t(string),
   "cellularGeneration": Js.Nullable.t(netInfoCellularGeneration),
+  "carrier": Js.Nullable.t(string),
 };
 
 type netInfoState = {
   .
   "_type": netInfoStateType,
   "isConnected": bool,
+  "isInternetReachable": bool,
+  "isWifiEnabled": bool,
   "details": Js.Null.t(details),
 };
 
 [@bs.module "@react-native-community/netinfo"]
-external fetch: unit => Js.Promise.t(netInfoState) = "";
+external configure: netInfoConfiguration => unit = "configure";
 
 [@bs.module "@react-native-community/netinfo"]
-external addEventListener: (netInfoState => unit) => t = "";
+external fetch: unit => Js.Promise.t(netInfoState) = "fetch";
 
 [@bs.module "@react-native-community/netinfo"]
-external useNetInfo: unit => netInfoState = "";
+external addEventListener: (netInfoState => unit) => t = "addEventListener";
+
+[@bs.module "@react-native-community/netinfo"]
+external useNetInfo: unit => netInfoState = "useNetInfo";
 
 module ConnectionType = {
   type t = string;
@@ -104,39 +132,4 @@ type info = {
   .
   "_type": ConnectionType.t,
   "effectiveType": EffectiveConnectionType.t,
-};
-
-type remove = {. "remove": unit => unit};
-
-module Legacy = {
-  [@bs.module "@react-native-community/netinfo"]
-  external addEventListener:
-    ([@bs.string] [ | `connectionChange], info => unit) => remove =
-    "";
-
-  [@bs.module "@react-native-community/netinfo"]
-  external removeEventListener:
-    ([@bs.string] [ | `connectionChange], info => unit) => unit =
-    "";
-
-  [@bs.module "@react-native-community/netinfo"]
-  external isConnectionExpensive: unit => Js.Promise.t(bool) = "";
-
-  [@bs.module "@react-native-community/netinfo"]
-  external getConnectionInfo: unit => Js.Promise.t(info) = "";
-
-  module IsConnected = {
-    [@bs.module "@react-native-community/netinfo"] [@bs.scope "isConnected"]
-    external addEventListener:
-      ([@bs.string] [ | `connectionChange], bool => unit) => remove =
-      "";
-
-    [@bs.module "@react-native-community/netinfo"] [@bs.scope "isConnected"]
-    external removeEventListener:
-      ([@bs.string] [ | `connectionChange], bool => unit) => unit =
-      "";
-
-    [@bs.module "@react-native-community/netinfo"] [@bs.scope "isConnected"]
-    external fetch: unit => Js.Promise.t(bool) = "";
-  };
 };

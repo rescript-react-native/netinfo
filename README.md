@@ -60,6 +60,15 @@ Finally, `@reason-react-native/netinfo` should be added to `bs-dependencies` in
 
 ### Types
 
+#### `netInfoConfiguration`
+
+| Property                   | Type               | Description                                                                                                                                                                                                                                                       |
+| -------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reachabilityUrl`          | `string`           | URL used to test if the internet is reachable. Only used on platforms which do not natively supply internet reachability information.                                                                                                                             |
+| `reachabilityTest`         | `response => bool` | A function to handle the `response` object returned when the reachability URL is called. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not natively supply internet reachability information. |
+| `reachabilityShortTimeout` | `float`            | Number of seconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not natively supply internet reachability information.                                                                      |
+| `reachabilityLongTimeout`  | `float`            | Number of seconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not natively supply internet reachability information.                                                                          |
+
 #### `netInfoStateType`
 
 Kind of the current network connection. Valid values are:
@@ -86,16 +95,6 @@ Cellular generation of the current network connection. Valid values are:
 | `net3g` | Inlined as "3g". Returned for EHRPD, EVDO, HSPA, HSUPA, HSDPA and UTMS connections. |
 | `net4g` | Inlined as "4g". Returned for HSPAP and LTE connections                             |
 
-#### `details`
-
-```reason
-type details = {
-  .
-  "isConnectionExpensive": bool,
-  "cellularGeneration": Js.Nullable.t(netInfoCellularGeneration),
-};
-```
-
 #### `netInfoState`
 
 ```reason
@@ -103,30 +102,83 @@ type netInfoState = {
   .
   "_type": netInfoStateType,
   "isConnected": bool,
+  "isInternetReachable": bool,
+  "isWifiEnabled": bool,
   "details": Js.Null.t(details),
 };
 ```
 
+- `isConnected` will be `true` if there is an active connection (but not imply
+  that the internet is necessarily reachable).
+- `isInternetReachable` will be `true` if the internet can be reached using the
+  active connection
+- `isWifiEnabled` will be `true` if WiFi is enabled on the device, and `false`
+  otherwise. _Android only_.
+
 `details` key will have value `Js.Null.empty` (`null`) when `_type` is `null` or
 `unknown`.
 
-If the `details` objects is not `null`, the `cellularGeneration` key within will
+#### `details`
 
-- have value `Js.Nullable.undefined` when `_type` is `wifi`, `bluetooth`,
-  `ethernet`, `wimax`, `vpn` or `other`.
-- have value `Js.Nullable.null` if the connection is not cellular or its
-  generation cannot be determined.
-- be of type `netInfoCellularGeneration` only when `_type` is `cellular` and its
-  generation can be determined.
+`details` depends on `_type` given within [`netInfoState`](#netInfoState). If
+`_type` is not `null` or `unknown`, `details` is an object as below:
+
+```reason
+type details = {
+  .
+  "isConnectionExpensive": bool,
+  "ssid": Js.Nullable.t(string),
+  "strength": Js.Nullable.t(int),
+  "ipAddress": Js.Nullable.t(string),
+  "subnet": Js.Nullable.t(string),
+  "cellularGeneration": Js.Nullable.t(netInfoCellularGeneration),
+  "carrier": Js.Nullable.t(string),
+};
+```
+
+| Property                | Platform              | Type   | Description                                                                         |
+| ----------------------- | --------------------- | ------ | ----------------------------------------------------------------------------------- |
+| `isConnectionExpensive` | Android, iOS, Windows | `bool` | If network connection is considered _expensive_ in either energy or monetary terms. |
+
+Note that some keys may only exist in the JS object when `_type` is `wifi` or
+`cellular`. Accordingly, in Reason, keys may have values
+`Js.Nullable.undefined`.
+
+- `ssid`, `strength`, `ipAddress` and `subnet` will have value
+  `Js.Nullable.undefined` unless `_type` is `wifi`.
+- `cellularGeneration` and `carrier` will have value `Js.Nullable.undefined`
+  unless `_type` is cellular.
+
+##### `_type` is `wifi`
+
+| Property    | Platform                | Type                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------- | ----------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ssid`      | Android, iOS (not tvOS) | `Js.Nullable.t(string)` | SSID of the network. May have value `Js.Nullable.undefined`, `Js.Nullable.null`, or be an empty string if undetermined. **On iOS, make sure your app meets at least one of the [following requirements](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion). On Android, make sure the `ACCESS_FINE_LOCATION` permission is listed in `AndroidManifest.xml` and accepted by the user**. |
+| `strength`  | Android                 | `Js.Nullable.t(string)` | If signal strength can be determined, will be an integer number from `0` to `5`. May have value `Js.Nullable.undefined` otherwise.                                                                                                                                                                                                                                                                                                                           |
+| `ipAddress` | Android, iOS            | `Js.Nullable.t(string)` | External IP address. Can be in IPv4 or IPv6 format. May have value `Js.Nullable.undefined` if undetermined.                                                                                                                                                                                                                                                                                                                                                  |
+| `subnet`    | Android, iOS            | `Js.Nullable.t(string)` | The subnet mask in IPv4 format. May have value `Js.Nullable.undefined` if undetermined.                                                                                                                                                                                                                                                                                                                                                                      |
+
+##### `type` is `cellular`
+
+| Property             | Platform              | Type                                                      | Description                                                                                                                                                                         |
+| -------------------- | --------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cellularGeneration` | Android, iOS, Windows | [`NetInfoCellularGeneration`](#netinfocellulargeneration) | Generation of cell network the user is connected to. This can give an indication of speed, but no guarantees. May have value `Js.Nullable.null` if generation cannot be determined. |
+| `carrier`            | Android, iOS          | `string`                                                  | The network carrier name. May have value `Js.Nullable.undefined` or may be empty if undetermined.                                                                                   |
 
 ### Methods
+
+#### `configure`
+
+```reason
+configure: netInfoConfiguration => unit
+```
 
 #### `fetch`
 
 To query the connection state, returns `netInfoState` wrapped in a `Promise`.
 
 ```reason
-fetch: unit => Js.Promise.t(netInfoState) = "";
+fetch: unit => Js.Promise.t(netInfoState)
 ```
 
 Below example demonstrates determination of the cellular connection generation,
@@ -178,7 +230,7 @@ The listener will be called once following subscription and each time connection
 state changes.
 
 ```reason
-addEventListener: (netInfoState => unit) => t;
+addEventListener: (netInfoState => unit) => t
 ```
 
 where

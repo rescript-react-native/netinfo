@@ -1,5 +1,11 @@
 # Changelog of `@reason-react-native/netinfo`
 
+## 5.3.0
+
+- `Legacy` module removed, to mirror removal of deprecated API
+- `configure` method and `netInfoConfiguration` type added
+- fields added to `netInfoState` and `details` types
+
 ## 4.1.0
 
 ### Breaking Changes

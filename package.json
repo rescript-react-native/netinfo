@@ -1,11 +1,11 @@
 {
   "name": "@reason-react-native/netinfo",
-  "version": "4.1.0",
+  "version": "5.3.0",
   "publishConfig": {
     "access": "public"
   },
   "peerDependencies": {
-    "@react-native-community/netinfo": "^4.1.0"
+    "@react-native-community/netinfo": "^5.3.0"
   },
   "repository": "https://github.com/reason-react-native/netinfo.git",
   "author": "sgny (https://github.com/sgny)",
@@ -43,7 +43,7 @@
     "npm-run-all": "^3.0.0",
     "prettier": "^1.16.4",
     "reason-react": "^0.7.0",
-    "@react-native-community/netinfo": "^4.1.0"
+    "@react-native-community/netinfo": "^5.3.0"
   },
   "prettier": {
     "trailingComma": "all",
