@@ -53,6 +53,7 @@ external netInfoConfiguration:
     ~reachabilityTest: response => bool=?,
     ~reachabilityShortTimeout: float=?,
     ~reachabilityLongTimeout: float=?,
+    ~reachabilityRequestTimeout: float=?,
     unit
   ) =>
   netInfoConfiguration =
@@ -83,6 +84,12 @@ external configure: netInfoConfiguration => unit = "configure";
 
 [@bs.module "@react-native-community/netinfo"]
 external fetch: unit => Js.Promise.t(netInfoState) = "fetch";
+
+[@bs.module "@react-native-community/netinfo"]
+external fetchInterface:
+  ([@bs.string] [ | `cellular | `ethernet | `wifi]) =>
+  Js.Promise.t(netInfoState) =
+  "fetch";
 
 [@bs.module "@react-native-community/netinfo"]
 external addEventListener: (netInfoState => unit) => t = "addEventListener";

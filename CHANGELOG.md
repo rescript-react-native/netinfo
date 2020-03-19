@@ -1,5 +1,10 @@
 # Changelog of `@reason-react-native/netinfo`
 
+## 5.6.0
+
+- `fetchInterface` method added
+- `reachabilityRequestTimeout` field added to `netInfoConfiguration`
+
 ## 5.3.0
 
 - `Legacy` module removed, to mirror removal of deprecated API

@@ -62,12 +62,16 @@ Finally, `@reason-react-native/netinfo` should be added to `bs-dependencies` in
 
 #### `netInfoConfiguration`
 
-| Property                   | Type               | Description                                                                                                                                                                                                                                                       |
-| -------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `reachabilityUrl`          | `string`           | URL used to test if the internet is reachable. Only used on platforms which do not natively supply internet reachability information.                                                                                                                             |
-| `reachabilityTest`         | `response => bool` | A function to handle the `response` object returned when the reachability URL is called. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not natively supply internet reachability information. |
-| `reachabilityShortTimeout` | `float`            | Number of seconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not natively supply internet reachability information.                                                                      |
-| `reachabilityLongTimeout`  | `float`            | Number of seconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not natively supply internet reachability information.                                                                          |
+To be used only when the platform does not natively supply information on
+internet reachability.
+
+| Property                     | Type               | Description                                                                                                                                                                |
+| ---------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reachabilityUrl`            | `string`           | URL used to test if the internet is reachable.                                                                                                                             |
+| `reachabilityTest`           | `response => bool` | A function to handle the `response` object returned when the reachability URL is called. It should return `true` if the response indicates that the internet is reachable. |
+| `reachabilityShortTimeout`   | `float`            | Number of seconds between internet reachability checks when the internet was not previously detected.                                                                      |
+| `reachabilityLongTimeout`    | `float`            | Number of seconds between internet reachability checks when the internet was previously detected.                                                                          |
+| `reachabilityRequestTimeout` | `float`            | Number of milliseconds allowed before reachability check fails.                                                                                                            |
 
 #### `netInfoStateType`
 
@@ -175,7 +179,8 @@ configure: netInfoConfiguration => unit
 
 #### `fetch`
 
-To query the connection state, returns `netInfoState` wrapped in a `Promise`.
+To query state of the active connection, returns `netInfoState` wrapped in a
+`Promise`.
 
 ```reason
 fetch: unit => Js.Promise.t(netInfoState)
@@ -220,6 +225,14 @@ React.useEffect0(() => {
   );
   None;
 });
+```
+
+#### `fetchInterface`
+
+To query the connection state for a particular interface.
+
+```reason
+fetchInterface: [ | `cellular | `ethernet | `wifi] => Js.Promise.t(netInfoState)
 ```
 
 #### `addEventListener`
