@@ -56,8 +56,7 @@ external netInfoConfiguration:
     ~reachabilityRequestTimeout: float=?,
     unit
   ) =>
-  netInfoConfiguration =
-  "";
+  netInfoConfiguration;
 
 type details = {
   .

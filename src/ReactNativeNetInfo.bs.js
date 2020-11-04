@@ -1,9 +1,9 @@
 'use strict';
 
 
-var ConnectionType = { };
+var ConnectionType = {};
 
-var EffectiveConnectionType = { };
+var EffectiveConnectionType = {};
 
 exports.ConnectionType = ConnectionType;
 exports.EffectiveConnectionType = EffectiveConnectionType;
