@@ -1,5 +1,9 @@
 # Changelog of `@reason-react-native/netinfo`
 
+## 5.6.1
+
+rescript 8.2 compat
+
 ## 5.6.0
 
 - `fetchInterface` method added

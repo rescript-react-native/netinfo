@@ -1,6 +1,6 @@
 {
   "name": "@reason-react-native/netinfo",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "publishConfig": {
     "access": "public"
   },
