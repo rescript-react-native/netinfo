@@ -86,8 +86,7 @@ external fetch: unit => Js.Promise.t(netInfoState) = "fetch";
 
 [@bs.module "@react-native-community/netinfo"]
 external fetchInterface:
-  ([@bs.string] [ | `cellular | `ethernet | `wifi]) =>
-  Js.Promise.t(netInfoState) =
+  [ | `cellular | `ethernet | `wifi] => Js.Promise.t(netInfoState) =
   "fetch";
 
 [@bs.module "@react-native-community/netinfo"]
