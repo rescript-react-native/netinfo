@@ -4,45 +4,29 @@
 [![Version](https://img.shields.io/npm/v/@reason-react-native/netinfo.svg)](https://www.npmjs.com/@reason-react-native/netinfo)
 [![Chat](https://img.shields.io/discord/235176658175262720.svg?logo=discord&colorb=blue)](https://reason-react-native.github.io/discord/)
 
-Reason / BuckleScript bindings for
-[`@react-native-community/netinfo`](https://github.com/react-native-community/react-native-netinfo)
-(exposed as `ReactNativeNetInfo`).
+[ReScript](https://rescript-lang.org) / [Reason](https://reasonml.github.io) bindings for
+[`@react-native-community/netinfo`](https://github.com/react-native-netinfo/react-native-netinfo).
 
-## Support
+Exposed as `ReactNativeNetInfo` module.
 
-`@reason-react-native/netinfo` X.y._ means it's compatible with
-`@react-native-community/netinfo` X.y._
-
-| version | react-native version |
-| ------- | -------------------- |
-| 4.1.0+  | 0.60.0+              |
-
-For 0.59-, you should use
-[`jetify -r`](https://github.com/mikehardy/jetifier/blob/master/README.md#to-reverse-jetify--convert-node_modules-dependencies-to-support-libraries).
+`@reason-react-native/netinfo` X.y.\* means it's compatible with
+`@react-native-community/netinfo` X.y.\*
 
 ## Installation
 
-With `yarn`:
-
-```console
-yarn add @reason-react-native/netinfo
-```
-
-With `npm`:
+When
+[`@react-native-community/netinfo`](https://github.com/react-native-netinfo/react-native-netinfo)
+is properly installed & configured by following their installation instructions,
+you can install the bindings:
 
 ```console
 npm install @reason-react-native/netinfo
+# or
+yarn add @reason-react-native/netinfo
 ```
 
-If you use React Native 0.60, `@react-native-community/netinfo` should be linked
-to your project:
-
-```console
-react-native link @react-native-community/netinfo
-```
-
-Finally, `@reason-react-native/netinfo` should be added to `bs-dependencies` in
-`BuckleScript` configuration of the project (`bsconfig.json`). For example:
+`@reason-react-native/netinfo` should be added to `bs-dependencies` in your
+`bsconfig.json`:
 
 ```diff
 {
@@ -50,6 +34,7 @@ Finally, `@reason-react-native/netinfo` should be added to `bs-dependencies` in
   "bs-dependencies": [
     "reason-react",
     "reason-react-native",
+    // ...
 +    "@reason-react-native/netinfo"
   ],
   //...
