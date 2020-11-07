@@ -62,9 +62,11 @@ type details = {
   .
   "isConnectionExpensive": bool,
   "ssid": Js.Nullable.t(string),
+  "bssid": Js.Nullable.t(string),
   "strength": Js.Nullable.t(int),
   "ipAddress": Js.Nullable.t(string),
   "subnet": Js.Nullable.t(string),
+  "frequency": Js.Nullable.t(float),
   "cellularGeneration": Js.Nullable.t(netInfoCellularGeneration),
   "carrier": Js.Nullable.t(string),
 };

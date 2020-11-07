@@ -1,6 +1,10 @@
 # Changelog of `@reason-react-native/netinfo`
 
-## 5.6.1
+## 5.9.0 - 2020-11-06
+
+- 5.9.0 compat
+
+## 5.6.1 - 2020-11-06
 
 rescript 8.2 compat
 
