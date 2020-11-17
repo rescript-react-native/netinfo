@@ -1,7 +1,7 @@
 {
   "name": "@reason-react-native/netinfo",
   "description": "ReScript bindings for @react-native-community/netinfo.",
-  "version": "5.9.0",
+  "version": "5.9.1",
   "publishConfig": {
     "access": "public"
   },

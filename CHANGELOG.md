@@ -1,5 +1,9 @@
 # Changelog of `@reason-react-native/netinfo`
 
+## 5.9.1 - 2020-11-17
+
+Fix npm description
+
 ## 5.9.0 - 2020-11-06
 
 - 5.9.0 compat
