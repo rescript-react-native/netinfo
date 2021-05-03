@@ -1,4 +1,4 @@
-# Changelog of `@reason-react-native/netinfo`
+# Changelog of `@rescript-react-native/netinfo`
 
 ## 5.9.1 - 2020-11-17
 
@@ -28,10 +28,10 @@ rescript 8.2 compat
 ### Breaking Changes
 
 - Moved from
-  [sgny/reason-react-native-netinfo](https://github.com/sgny/reason-react-native-netinfo#readme).
-  `npm` package was previously named `reason-react-native-netinfo`. Please
+  [sgny/rescript-react-native-netinfo](https://github.com/sgny/rescript-react-native-netinfo#readme).
+  `npm` package was previously named `rescript-react-native-netinfo`. Please
   update your dependencies accordingly. You may update your existing code using
-  the `NetInfo` module of `reason-react-native` by replacing references to the
+  the `NetInfo` module of `rescript-react-native` by replacing references to the
   `ReactNative.NetInfo` module with `ReactNativeNetInfo.Legacy`. However, do
   note that the new API is more straightforward.
 
@@ -39,10 +39,10 @@ rescript 8.2 compat
 
 - Releases require use of [jetifier](https://github.com/mikehardy/jetifier) for
   versions 0.59.x of React Native. You may continue to use
-  [`reason-react-native-netinfo`](https://www.npmjs.com/package/reason-react-native-netinfo)
+  [`rescript-react-native-netinfo`](https://www.npmjs.com/package/rescript-react-native-netinfo)
   version 3.2.x if you do not wish to use `jetifier`.
 
 ## 3.x
 
 See
-[sgny/reason-react-native-netinfo](https://github.com/sgny/reason-react-native-netinfo/tree/3.2.4])
+[sgny/rescript-react-native-netinfo](https://github.com/sgny/rescript-react-native-netinfo/tree/3.2.4])

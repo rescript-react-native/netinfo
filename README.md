@@ -1,15 +1,15 @@
-# `@reason-react-native/netinfo`
+# `@rescript-react-native/netinfo`
 
-[![Build Status](https://github.com/reason-react-native/netinfo/workflows/Build/badge.svg)](https://github.com/reason-react-native/netinfo/actions)
-[![Version](https://img.shields.io/npm/v/@reason-react-native/netinfo.svg)](https://www.npmjs.com/@reason-react-native/netinfo)
-[![Chat](https://img.shields.io/discord/235176658175262720.svg?logo=discord&colorb=blue)](https://reason-react-native.github.io/discord/)
+[![Build Status](https://github.com/rescript-react-native/netinfo/workflows/Build/badge.svg)](https://github.com/rescript-react-native/netinfo/actions)
+[![Version](https://img.shields.io/npm/v/@rescript-react-native/netinfo.svg)](https://www.npmjs.com/@rescript-react-native/netinfo)
+[![ReScript Forum](https://img.shields.io/discourse/posts?color=e6484f&label=ReScript%20Forum&server=https%3A%2F%2Fforum.rescript-lang.org)](https://forum.rescript-lang.org/)
 
-[ReScript](https://rescript-lang.org) / [Reason](https://reasonml.github.io) bindings for
+[ReScript](https://rescript-lang.org) bindings for
 [`@react-native-community/netinfo`](https://github.com/react-native-netinfo/react-native-netinfo).
 
 Exposed as `ReactNativeNetInfo` module.
 
-`@reason-react-native/netinfo` X.y.\* means it's compatible with
+`@rescript-react-native/netinfo` X.y.\* means it's compatible with
 `@react-native-community/netinfo` X.y.\*
 
 ## Installation
@@ -20,22 +20,22 @@ is properly installed & configured by following their installation instructions,
 you can install the bindings:
 
 ```console
-npm install @reason-react-native/netinfo
+npm install @rescript-react-native/netinfo
 # or
-yarn add @reason-react-native/netinfo
+yarn add @rescript-react-native/netinfo
 ```
 
-`@reason-react-native/netinfo` should be added to `bs-dependencies` in your
+`@rescript-react-native/netinfo` should be added to `bs-dependencies` in your
 `bsconfig.json`:
 
 ```diff
 {
   //...
   "bs-dependencies": [
-    "reason-react",
-    "reason-react-native",
+    "@rescript/react",
+    "rescript-react-native",
     // ...
-+    "@reason-react-native/netinfo"
++    "@rescript-react-native/netinfo"
   ],
   //...
 }
@@ -86,7 +86,7 @@ Cellular generation of the current network connection. Valid values are:
 
 #### `netInfoState`
 
-```reason
+```rescript
 type netInfoState = {
   .
   "_type": netInfoStateType,
@@ -112,7 +112,7 @@ type netInfoState = {
 `details` depends on `_type` given within [`netInfoState`](#netInfoState). If
 `_type` is not `null` or `unknown`, `details` is an object as below:
 
-```reason
+```rescript
 type details = {
   .
   "isConnectionExpensive": bool,
@@ -158,7 +158,7 @@ Note that some keys may only exist in the JS object when `_type` is `wifi` or
 
 #### `configure`
 
-```reason
+```rescript
 configure: netInfoConfiguration => unit
 ```
 
@@ -167,14 +167,14 @@ configure: netInfoConfiguration => unit
 To query state of the active connection, returns `netInfoState` wrapped in a
 `Promise`.
 
-```reason
+```rescript
 fetch: unit => Js.Promise.t(netInfoState)
 ```
 
 Below example demonstrates determination of the cellular connection generation,
 using this method.
 
-```reason
+```rescript
 React.useEffect0(() => {
   Js.Promise.(
     ReactNativeNetInfo.fetch()
@@ -216,7 +216,7 @@ React.useEffect0(() => {
 
 To query the connection state for a particular interface.
 
-```reason
+```rescript
 fetchInterface: [ | `cellular | `ethernet | `wifi] => Js.Promise.t(netInfoState)
 ```
 
@@ -227,19 +227,19 @@ To subscribe to the connection state; accepts a listener of type
 The listener will be called once following subscription and each time connection
 state changes.
 
-```reason
+```rescript
 addEventListener: (netInfoState => unit) => t
 ```
 
 where
 
-```reason
+```rescript
 type t = unit => unit
 ```
 
 Below example demonstrates subscribing to changes in connection state:
 
-```reason
+```rescript
 React.useEffect0(() => {
   let remove =
     ReactNativeNetInfo.addEventListener(w =>
@@ -277,13 +277,13 @@ React.useEffect0(() => {
 
 This method returns a React Hook with type `netInfoState`
 
-```reason
+```rescript
 useNetInfo: unit => netInfoState
 ```
 
 Below example demonstrates its use within a `Text` component:
 
-```reason
+```rescript
 <Text>
   (
     switch (ReactNativeNetInfo.useNetInfo()##details->Js.Null.toOption) {
@@ -324,11 +324,11 @@ releases.
 ## Contribute
 
 Read the
-[contribution guidelines](https://github.com/reason-react-native/.github/blob/master/CONTRIBUTING.md)
+[contribution guidelines](https://github.com/rescript-react-native/.github/blob/master/CONTRIBUTING.md)
 before contributing.
 
 ## Code of Conduct
 
 We want this community to be friendly and respectful to each other. Please read
-[our full code of conduct](https://github.com/reason-react-native/.github/blob/master/CODE_OF_CONDUCT.md)
+[our full code of conduct](https://github.com/rescript-react-native/.github/blob/master/CODE_OF_CONDUCT.md)
 so that you can understand what actions will and will not be tolerated.
